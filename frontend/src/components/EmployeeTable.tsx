@@ -10,14 +10,14 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import { AssignmentData, getAssignmentsDataMock } from '../api';
+import { AssignmentData, getAssignmentsData } from '../api';
 
 const EmployeeTable: React.FC = () => {
   const [assignments, setAssignments] = useState<AssignmentData[]>([]);
 
   useEffect(() => {
     // Fetch employee data from REST endpoint
-    getAssignmentsDataMock().then((data) => {
+    getAssignmentsData().then((data) => {
       setAssignments(data);
     });
   }, []);
