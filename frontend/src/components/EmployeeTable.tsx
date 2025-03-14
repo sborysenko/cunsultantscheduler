@@ -10,15 +10,7 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import {
-  AssignmentData,
-  Consultant,
-  Customer,
-  getConsultantsMock,
-  getCustomersMock,
-  getAssignmentsData,
-  getAssignmentsDataMock
-} from '../api';
+import { AssignmentData, getAssignmentsDataMock } from '../api';
 
 const EmployeeTable: React.FC = () => {
   const [assignments, setAssignments] = useState<AssignmentData[]>([]);
