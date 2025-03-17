@@ -94,6 +94,7 @@ public class AssignmentService {
                 days.forEach(day -> {
                     RevenueDay rd = new RevenueDay();
                     rd.setRevenue(consultant.getRatePerHour() * day.getHoursWorked());
+                    rd.setHours(day.getHoursWorked());
                     rd.setDay(day.getDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
                     holder.addHours(day.getHoursWorked());

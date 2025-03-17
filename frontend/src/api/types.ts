@@ -10,7 +10,7 @@ export type Consultant = {
 
 type DayData = {
   day: string;
-  hours: number;
+  hours?: number;
   revenue: number;
 };
 
@@ -20,8 +20,9 @@ type WeekData = {
   days: DayData[];
 };
 
-type RevenueMonth = {
-  month: string;
+export type RevenueMonth = {
+  name: string;
+  revenue: number;
   weeks: WeekData[];
 };
 
