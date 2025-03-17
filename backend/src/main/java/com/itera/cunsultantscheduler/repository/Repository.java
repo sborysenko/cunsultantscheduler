@@ -5,12 +5,14 @@ import com.itera.cunsultantscheduler.model.Consultant;
 import com.itera.cunsultantscheduler.model.Customer;
 import com.itera.cunsultantscheduler.model.ForecastDay;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class Repository {
     @Getter
@@ -26,16 +28,19 @@ public class Repository {
                         .id(1L)
                         .name("Alice Johnson")
                         .ratePerHour(50.0)
+                        .hoursPerDay(8)
                         .build(),
                 Consultant.builder()
                         .id(2L)
                         .name("Bob Smith")
                         .ratePerHour(60.00)
+                        .hoursPerDay(8)
                         .build(),
-                 Consultant.builder()
+                Consultant.builder()
                         .id(3L)
                         .name("Scott Frederick")
                         .ratePerHour(40.00)
+                        .hoursPerDay(8)
                         .build()
             )
         );
@@ -134,11 +139,27 @@ public class Repository {
     }
 
     public Consultant getConsultant(Long id) {
+        log.info("Get consultant by ID {}", id);
         return consultants.stream().filter(c -> c.getId().equals(id)).findFirst().orElse(null);
     }
 
+    public List<Consultant> getConsultants(Set<Long> ids) {
+        log.info("Get consultants by ID list {}", ids);
+        return consultants.stream()
+                .filter(c -> ids.contains(c.getId()))
+                .collect(Collectors.toList());
+    }
+
     public Customer getCustomer(Long id) {
+        log.info("Get customer by ID {}", id);
         return customers.stream().filter(c -> c.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    public List<Customer> getCustomers(Set<Long> ids) {
+        log.info("Get customers by ID list {}", ids);
+        return customers.stream()
+                .filter(c -> ids.contains(c.getId()))
+                .collect(Collectors.toList());
     }
 
     public List<Assignment> getAllAssignments() {

@@ -1,0 +1,62 @@
+type Query {
+    bookings: [Booking]
+    consultants: [Consultant]
+    customers: [Customer]
+    assignments: [Assignment]
+}
+
+type Booking {
+    consultant: Consultant
+    assignments: [AssignmentRevenue]
+}
+
+type Consultant {
+    id: ID
+    name: String
+    ratePerHour: Float
+    hoursPerDay: Int
+}
+
+type Assignment {
+    id: ID
+    name: String
+    customer: Customer
+    consultant: Consultant
+    forecastDays: [ForecastDay]
+}
+
+type ForecastDay {
+    date: String
+    hoursWorked: Int
+}
+
+type AssignmentRevenue {
+    id: ID
+    name: String
+    revenue: Float
+    hoursWorked: Int
+    customer: Customer
+    revenueMonth: [RevenueMonth]
+}
+
+type Customer {
+    id: ID
+    name: String
+}
+
+type RevenueMonth {
+    name: String
+    revenue: Float
+    weeks: [RevenueWeek]
+}
+
+type RevenueWeek {
+    weekNumber: Int
+    revenue: Float
+    days: [RevenueDay]
+}
+
+type RevenueDay {
+    day: String
+    revenue: Float
+}
