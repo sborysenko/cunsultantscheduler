@@ -26,17 +26,20 @@ public class Repository {
                         .id(1L)
                         .name("Alice Johnson")
                         .ratePerHour(50.0)
+                        .hoursPerDay(8)
                         .build(),
                 Consultant.builder()
                         .id(2L)
                         .name("Bob Smith")
                         .ratePerHour(60.00)
+                        .hoursPerDay(8)
                         .build(),
                  Consultant.builder()
                         .id(3L)
                         .name("Scott Frederick")
                         .ratePerHour(40.00)
-                        .build()
+                         .hoursPerDay(8)
+                         .build()
             )
         );
 
