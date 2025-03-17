@@ -9,16 +9,61 @@ import {
   TableRow,
   Paper,
   Typography,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Stack,
 } from '@mui/material';
 import { AssignmentData, getAssignmentsData } from '../api';
 
 const EmployeeTable: React.FC = () => {
-  const [assignments, setAssignments] = useState<AssignmentData[]>([]);
+  const [assignmentData, setAssignmentData] = useState<AssignmentData[]>([]);
+  const [view, setView] = useState<'day' | 'week' | 'month'>('day');
+  const [dataMode, setDataMode] = useState<'revenue' | 'hours'>('revenue');
+
+  // Helper function to get all unique dates from all assignments
+  const getAllUniqueDates = () => {
+    const allDates = new Set<string>();
+    assignmentData.forEach(consultantData => 
+      consultantData.assignments.forEach(assignment =>
+        assignment.revenueMonth.forEach(month =>
+          month.weeks.forEach(week =>
+            week.days.forEach(day => allDates.add(day.day))
+          )
+        )
+      )
+    );
+    return Array.from(allDates).sort();
+  };
+
+  // Helper function to get all unique weeks from all assignments
+  const getAllUniqueWeeks = () => {
+    const allWeeks = new Set<number>();
+    assignmentData.forEach(consultantData => 
+      consultantData.assignments.forEach(assignment =>
+        assignment.revenueMonth.forEach(month =>
+          month.weeks.forEach(week => allWeeks.add(week.weekNumber))
+        )
+      )
+    );
+    return Array.from(allWeeks).sort((a, b) => a - b);
+  };
+
+  // Helper function to get all unique months from all assignments
+  const getAllUniqueMonths = () => {
+    const allMonths = new Set<string>();
+    assignmentData.forEach(consultantData => 
+      consultantData.assignments.forEach(assignment =>
+        assignment.revenueMonth.forEach(month => allMonths.add(month.name))
+      )
+    );
+    return Array.from(allMonths).sort();
+  };
 
   useEffect(() => {
     // Fetch employee data from REST endpoint
     getAssignmentsData().then((data) => {
-      setAssignments(data);
+      setAssignmentData(data);
     });
   }, []);
 
@@ -27,65 +72,181 @@ const EmployeeTable: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Consultant Booking & Forecast
       </Typography>
-      <TableContainer component={Paper}>
+
+      <Stack direction="row" spacing={4} sx={{ mb: 2 }}>
+        {/* Time Period Switcher */}
+        <RadioGroup
+          row
+          value={view}
+          onChange={(e) => setView(e.target.value as 'day' | 'week' | 'month')}
+        >
+          <FormControlLabel value="day" control={<Radio />} label="Day" />
+          <FormControlLabel value="week" control={<Radio />} label="Week" />
+          <FormControlLabel value="month" control={<Radio />} label="Month" />
+        </RadioGroup>
+
+        {/* Data Mode Switcher */}
+        <RadioGroup
+          row
+          value={dataMode}
+          onChange={(e) => setDataMode(e.target.value as 'revenue' | 'hours')}
+        >
+          <FormControlLabel value="revenue" control={<Radio />} label="Revenue" />
+          <FormControlLabel value="hours" control={<Radio />} label="Hours" />
+        </RadioGroup>
+      </Stack>
+
+      {/* Table */}
+      <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>Consultant</TableCell>
-              <TableCell>Customer and Project</TableCell>
-              {assignments[0]?.assignments?.[0]?.revenueMonth?.flatMap(
-                (month) =>
-                  month.weeks.map((week) => (
-                    <TableCell key={`week-${week.weekNumber}`} align="center">
-                      Week {week.weekNumber}
-                    </TableCell>
-                  ))
-              )}
+            <TableRow sx={{ backgroundColor: 'grey.200' }}>
+              <TableCell 
+                sx={{ 
+                  minWidth: 100, 
+                  color: 'text.primary',
+                  fontWeight: 'bold',
+                  borderRight: 1,
+                  borderColor: 'grey.300'
+                }}
+              >
+                Consultant
+              </TableCell>
+              <TableCell 
+                sx={{ 
+                  minWidth: 180, 
+                  color: 'text.primary',
+                  fontWeight: 'bold',
+                  borderRight: 1,
+                  borderColor: 'grey.300'
+                }}
+              >
+                Customer and Project
+              </TableCell>
+
+              {/* Dynamic Headers Based on Selected View */}
+              {view === 'day' && getAllUniqueDates().map(date => (
+                <TableCell 
+                  key={date} 
+                  align="center"
+                  sx={{ 
+                    color: 'text.primary',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {date}
+                </TableCell>
+              ))}
+
+              {view === 'week' && getAllUniqueWeeks().map(weekNumber => (
+                <TableCell 
+                  key={weekNumber} 
+                  align="center"
+                  sx={{ 
+                    color: 'text.primary',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  Week {weekNumber}
+                </TableCell>
+              ))}
+
+              {view === 'month' && getAllUniqueMonths().map(monthName => (
+                <TableCell 
+                  key={monthName} 
+                  align="center"
+                  sx={{ 
+                    color: 'text.primary',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {monthName}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
+
           <TableBody>
-            {assignments.map((assignmentData) => (
-              <React.Fragment key={assignmentData.consultant.id}>
-                {assignmentData.assignments.map((assignment) => (
-                  <TableRow key={assignment.id}>
-                    <TableCell>{assignmentData.consultant.name}</TableCell>
-                    <TableCell>
-                      {assignment.customer.name} - {assignment.name}
-                    </TableCell>
-                    {assignment.revenueMonth.flatMap((month) =>
-                      month.weeks.map((week) => (
-                        <TableCell
-                          key={`revenue-${week.weekNumber}`}
-                          align="center"
-                        >
-                          {week.revenue.toFixed(1)}
-                        </TableCell>
-                      ))
-                    )}
-                  </TableRow>
-                ))}
-                <TableRow>
-                  <TableCell colSpan={2} style={{ fontWeight: 'bold' }}>
-                    Free Capacity
+            {assignmentData.map((consultantData) => 
+              consultantData.assignments.map((assignment) => (
+                <TableRow 
+                  key={`${consultantData.consultant.id}-${assignment.id}`}
+                  sx={{ '&:nth-of-type(odd)': { backgroundColor: 'action.hover' } }}
+                >
+                  <TableCell 
+                    sx={{ 
+                      minWidth: 100,
+                      fontWeight: 'bold',
+                      borderRight: 1,
+                      borderColor: 'grey.200'
+                    }}
+                  >
+                    {consultantData.consultant.name}
+                    <Typography variant="caption" display="block" color="text.secondary">
+                      Rate: ${consultantData.consultant.ratePerHour}/h
+                    </Typography>
                   </TableCell>
-                  {assignmentData.assignments[0]?.revenueMonth.flatMap(
-                    (month) =>
-                      month.weeks.map((week) => (
-                        <TableCell
-                          key={`capacity-${week.weekNumber}`}
-                          align="center"
-                          style={{ fontWeight: 'bold' }}
-                        >
-                          {(
-                            40 -
-                            week.revenue / assignmentData.consultant.ratePerHour
-                          ).toFixed(1)}
-                        </TableCell>
-                      ))
-                  )}
+                  <TableCell sx={{ minWidth: 200, borderRight: 1, borderColor: 'grey.200' }}>
+                    {assignment.customer.name} - {assignment.name}
+                  </TableCell>
+
+                  {/* Dynamic Data Based on Selected View */}
+                  {view === 'day' && getAllUniqueDates().map(date => {
+                    const dayData = assignment.revenueMonth
+                      .flatMap(month => month.weeks)
+                      .flatMap(week => week.days)
+                      .find(day => day.day === date);
+                    
+                    return (
+                      <TableCell key={date} align="center">
+                        {dayData ? (
+                          dataMode === 'revenue' 
+                            ? `$${dayData.revenue.toFixed()}`
+                            : `${dayData.hours || 0}h`
+                        ) : '-'}
+                      </TableCell>
+                    );
+                  })}
+
+                  {view === 'week' && getAllUniqueWeeks().map(weekNumber => {
+                    const weekData = assignment.revenueMonth
+                      .flatMap(month => month.weeks)
+                      .find(week => week.weekNumber === weekNumber);
+                    
+                    const weekHours = weekData?.days.reduce((sum, day) => sum + (day.hours || 0), 0) || 0;
+                    
+                    return (
+                      <TableCell key={weekNumber} align="center">
+                        {weekData ? (
+                          dataMode === 'revenue'
+                            ? `$${weekData.revenue.toFixed()}`
+                            : `${weekHours}h`
+                        ) : '-'}
+                      </TableCell>
+                    );
+                  })}
+
+                  {view === 'month' && getAllUniqueMonths().map(monthName => {
+                    const monthData = assignment.revenueMonth
+                      .find(month => month.name === monthName);
+                    
+                    const monthHours = monthData?.weeks
+                      .flatMap(week => week.days)
+                      .reduce((sum, day) => sum + (day.hours || 0), 0) || 0;
+                    
+                    return (
+                      <TableCell key={monthName} align="center">
+                        {monthData ? (
+                          dataMode === 'revenue'
+                            ? `$${monthData.revenue.toFixed()}`
+                            : `${monthHours}h`
+                        ) : '-'}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
-              </React.Fragment>
-            ))}
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
