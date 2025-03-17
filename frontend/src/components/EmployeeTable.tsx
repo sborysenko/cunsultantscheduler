@@ -178,20 +178,18 @@ const EmployeeTable: React.FC = () => {
                 Customer and Project
               </TableCell>
 
-              {/* Total Hours Column - Only visible in hours mode */}
-              {dataMode === 'hours' && (
-                <TableCell
-                  sx={{
-                    width: 100,
-                    color: 'text.primary',
-                    fontWeight: 'bold',
-                    borderRight: 1,
-                    borderColor: 'grey.300',
-                  }}
-                >
-                  Total Hours
-                </TableCell>
-              )}
+              {/* Total Column - Shows either Revenue or Hours based on mode */}
+              <TableCell
+                sx={{
+                  width: 100,
+                  color: 'text.primary',
+                  fontWeight: 'bold',
+                  borderRight: 1,
+                  borderColor: 'grey.300',
+                }}
+              >
+                {dataMode === 'revenue' ? 'Total Revenue' : 'Total Hours'}
+              </TableCell>
 
               {/* Dynamic Headers Based on Selected View */}
               {view === 'day' &&
@@ -274,18 +272,19 @@ const EmployeeTable: React.FC = () => {
                     {assignment.customer.name} - {assignment.name}
                   </TableCell>
 
-                  {/* Total Hours Column - Only visible in hours mode */}
-                  {dataMode === 'hours' && (
-                    <TableCell
-                      align="center"
-                      sx={{
-                        borderRight: 1,
-                        borderColor: 'grey.200',
-                      }}
-                    >
-                      {assignment.hoursWorked}h
-                    </TableCell>
-                  )}
+                  {/* Total Column - Shows either Revenue or Hours based on mode */}
+                  <TableCell
+                    align="center"
+                    sx={{
+                      borderRight: 1,
+                      borderColor: 'grey.200',
+                    }}
+                  >
+                    {dataMode === 'revenue' 
+                      ? `$${assignment.revenue.toFixed()}`
+                      : `${assignment.hoursWorked}h`
+                    }
+                  </TableCell>
 
                   {/* Dynamic Data Based on Selected View */}
                   {view === 'day' &&
