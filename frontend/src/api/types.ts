@@ -10,7 +10,7 @@ export type Consultant = {
 
 type DayData = {
   day: string;
-  hours: number;
+  hours?: number;
   revenue: number;
 };
 
