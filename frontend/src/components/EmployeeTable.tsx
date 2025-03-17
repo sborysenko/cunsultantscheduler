@@ -151,7 +151,7 @@ const EmployeeTable: React.FC = () => {
             <TableRow sx={{ backgroundColor: 'grey.200' }}>
               <TableCell 
                 sx={{ 
-                  minWidth: 100, 
+                  width: 100, 
                   color: 'text.primary',
                   fontWeight: 'bold',
                   borderRight: 1,
@@ -162,7 +162,7 @@ const EmployeeTable: React.FC = () => {
               </TableCell>
               <TableCell 
                 sx={{ 
-                  minWidth: 180, 
+                  width: 200, 
                   color: 'text.primary',
                   fontWeight: 'bold',
                   borderRight: 1,
