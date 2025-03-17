@@ -13,6 +13,8 @@ import {
   FormControlLabel,
   Radio,
   Stack,
+  Alert,
+  Button,
 } from '@mui/material';
 import { AssignmentData, getAssignmentsData } from '../api';
 
@@ -20,6 +22,8 @@ const EmployeeTable: React.FC = () => {
   const [assignmentData, setAssignmentData] = useState<AssignmentData[]>([]);
   const [view, setView] = useState<'day' | 'week' | 'month'>('day');
   const [dataMode, setDataMode] = useState<'revenue' | 'hours'>('revenue');
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Helper function to get all unique dates from all assignments
   const getAllUniqueDates = () => {
@@ -60,12 +64,50 @@ const EmployeeTable: React.FC = () => {
     return Array.from(allMonths).sort();
   };
 
-  useEffect(() => {
-    // Fetch employee data from REST endpoint
-    getAssignmentsData().then((data) => {
+  const fetchData = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const data = await getAssignmentsData();
       setAssignmentData(data);
-    });
+    } catch (err) {
+      console.error('Error fetching assignments:', err);
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
+
+  if (error) {
+    return (
+      <Container>
+        <Typography variant="h4" gutterBottom>
+          Consultant Booking & Forecast
+        </Typography>
+        <Alert 
+          severity="error" 
+          sx={{ mt: 2 }}
+          action={
+            <Button 
+              color="inherit" 
+              size="small" 
+              onClick={fetchData}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Retrying...' : 'Retry'}
+            </Button>
+          }
+        >
+          {error}
+        </Alert>
+      </Container>
+    );
+  }
 
   return (
     <Container>
@@ -97,8 +139,14 @@ const EmployeeTable: React.FC = () => {
       </Stack>
 
       {/* Table */}
-      <TableContainer component={Paper} sx={{ mt: 2 }}>
-        <Table>
+      <TableContainer 
+        component={Paper} 
+        sx={{ 
+          mt: 2,
+          width: '100%'
+        }}
+      >
+        <Table sx={{ width: '100%' }}>
           <TableHead>
             <TableRow sx={{ backgroundColor: 'grey.200' }}>
               <TableCell 

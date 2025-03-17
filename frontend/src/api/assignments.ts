@@ -2,9 +2,13 @@ import { API_BASE_URL } from './const';
 import { AssignmentData } from './types';
 
 export async function getAssignmentsData(): Promise<AssignmentData[]> {
-  return fetch(`${API_BASE_URL}/assignments`)
-    .then((response) => response.json())
-    .catch((error) => console.error('Error fetching assignments: ', error));
+  const response = await fetch(`${API_BASE_URL}/assignments`);
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch data (HTTP ${response.status})`);
+  }
+
+  return response.json();
 }
 
 export async function getAssignmentsDataMock(): Promise<AssignmentData[]> {
