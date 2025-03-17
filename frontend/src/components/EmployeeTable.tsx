@@ -25,6 +25,15 @@ const EmployeeTable: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Helper function to format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
   // Helper function to get all unique dates from all assignments
   const getAllUniqueDates = () => {
     const allDates = new Set<string>();
@@ -200,9 +209,13 @@ const EmployeeTable: React.FC = () => {
                     sx={{
                       color: 'text.primary',
                       fontWeight: 'bold',
+                      whiteSpace: 'nowrap',
+                      width: 80,
+                      minWidth: 80,
+                      padding: '16px 8px'
                     }}
                   >
-                    {date}
+                    {formatDate(date)}
                   </TableCell>
                 ))}
 
