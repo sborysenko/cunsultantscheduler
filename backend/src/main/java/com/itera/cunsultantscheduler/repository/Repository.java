@@ -65,8 +65,8 @@ public class Repository {
                         Assignment.builder()
                                 .id(1L)
                                 .name("Assignment 1")
-                                .consultantId(1L)
-                                .customerId(1L)
+                                .consultant(getConsultant(1L))
+                                .customer(getCustomer(1L))
                                 .forecastDays(List.of(
                                         ForecastDay.builder().date(LocalDate.of(2025, 3, 1)).hoursWorked(8).build(),
                                         ForecastDay.builder().date(LocalDate.of(2025, 3, 2)).hoursWorked(8).build(),
@@ -76,8 +76,8 @@ public class Repository {
                         Assignment.builder()
                                 .id(2L)
                                 .name("Assignment 2")
-                                .consultantId(1L)
-                                .customerId(2L)
+                                .consultant(getConsultant(1L))
+                                .customer(getCustomer(2L))
                                 .forecastDays(List.of(
                                         ForecastDay.builder().date(LocalDate.of(2025, 3, 5)).hoursWorked(8).build(),
                                         ForecastDay.builder().date(LocalDate.of(2025, 3, 6)).hoursWorked(8).build(),
@@ -91,8 +91,8 @@ public class Repository {
                         Assignment.builder()
                                 .id(3L)
                                 .name("Assignment 3")
-                                .consultantId(2L)
-                                .customerId(1L)
+                                .consultant(getConsultant(2L))
+                                .customer(getCustomer(1L))
                                 .forecastDays(List.of(
                                         ForecastDay.builder().date(LocalDate.of(2025, 3, 1)).hoursWorked(8).build(),
                                         ForecastDay.builder().date(LocalDate.of(2025, 3, 2)).hoursWorked(8).build(),
@@ -102,8 +102,8 @@ public class Repository {
                         Assignment.builder()
                                 .id(4L)
                                 .name("Assignment 4")
-                                .consultantId(2L)
-                                .customerId(2L)
+                                .consultant(getConsultant(2L))
+                                .customer(getCustomer(2L))
                                 .forecastDays(List.of(
                                         ForecastDay.builder().date(LocalDate.of(2025, 3, 5)).hoursWorked(8).build(),
                                         ForecastDay.builder().date(LocalDate.of(2025, 3, 6)).hoursWorked(8).build(),
@@ -117,8 +117,8 @@ public class Repository {
                         Assignment.builder()
                                 .id(5L)
                                 .name("Assignment 5")
-                                .consultantId(3L)
-                                .customerId(1L)
+                                .consultant(getConsultant(3L))
+                                .customer(getCustomer(1L))
                                 .forecastDays(List.of(
                                         ForecastDay.builder().date(LocalDate.of(2025, 3, 1)).hoursWorked(8).build(),
                                         ForecastDay.builder().date(LocalDate.of(2025, 3, 2)).hoursWorked(8).build(),

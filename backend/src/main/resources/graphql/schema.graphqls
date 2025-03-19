@@ -1,13 +1,24 @@
 type Query {
-    bookings: [Booking]
     consultants: [Consultant]
     customers: [Customer]
     assignments: [Assignment]
 }
 
-type Booking {
-    consultant: Consultant
-    assignments: [AssignmentRevenue]
+type Mutation {
+    addConsultant(consultantInput: ConsultantInput): Consultant
+    addCustomer(customerInput: CustomerInput): Customer
+    assign(consultantId: ID, customerId: ID, name: String): Assignment
+    addForecastDay(assignmentId: ID, date: String, hoursWorked: Int): ForecastDay
+}
+
+input ConsultantInput {
+    name: String
+    ratePerHour: Float
+    hoursPerDay: Int
+}
+
+input CustomerInput {
+    name: String
 }
 
 type Consultant {

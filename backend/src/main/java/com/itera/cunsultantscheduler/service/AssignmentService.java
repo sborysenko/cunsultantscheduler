@@ -57,7 +57,7 @@ public class AssignmentService {
     }
 
     private AssignmentDto buildConsultantAssignment(Assignment assignment, Consultant consultant) {
-        Customer customer = repository.getCustomer(assignment.getCustomerId());
+        Customer customer = repository.getCustomer(assignment.getCustomer().getId());
         RevenueHolder revenue = collectRevenue(assignment, consultant);
 
         return AssignmentDto.builder()
