@@ -154,7 +154,7 @@ public class BookingService {
                 .collect(Collectors.groupingBy(
                         record -> record.getDate().getMonth(), // Group by month
                         Collectors.groupingBy(
-                                record -> record.getDate().get(WeekFields.of(Locale.getDefault()).weekOfMonth()), // Group by week
+                                record -> record.getDate().get(WeekFields.of(Locale.getDefault()).weekOfYear()), // Group by week
                                 Collectors.toList() // Group by day within week
                         )
                 ));
