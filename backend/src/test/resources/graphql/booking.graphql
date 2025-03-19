@@ -1,0 +1,33 @@
+query book {
+    bookings {
+        consultant {
+            id
+            name
+            ratePerHour
+            hoursPerDay
+        }
+        assignments {
+            id
+            name
+            revenue
+            hoursWorked
+            customer {
+                id
+                name
+            }
+            revenueMonth {
+                name
+                revenue
+                weeks {
+                    weekNumber
+                    revenue
+                    days {
+                        day
+                        revenue
+                    }
+                }
+            }
+        }
+    }
+}
+

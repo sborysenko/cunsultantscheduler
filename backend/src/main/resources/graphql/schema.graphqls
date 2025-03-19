@@ -1,0 +1,73 @@
+type Query {
+    consultants: [Consultant]
+    customers: [Customer]
+    assignments: [Assignment]
+}
+
+type Mutation {
+    addConsultant(consultantInput: ConsultantInput): Consultant
+    addCustomer(customerInput: CustomerInput): Customer
+    assign(consultantId: ID, customerId: ID, name: String): Assignment
+    addForecastDay(assignmentId: ID, date: String, hoursWorked: Int): ForecastDay
+}
+
+input ConsultantInput {
+    name: String
+    ratePerHour: Float
+    hoursPerDay: Int
+}
+
+input CustomerInput {
+    name: String
+}
+
+type Consultant {
+    id: ID
+    name: String
+    ratePerHour: Float
+    hoursPerDay: Int
+}
+
+type Assignment {
+    id: ID
+    name: String
+    customer: Customer
+    consultant: Consultant
+    forecastDays: [ForecastDay]
+}
+
+type ForecastDay {
+    date: String
+    hoursWorked: Int
+}
+
+type AssignmentRevenue {
+    id: ID
+    name: String
+    revenue: Float
+    hoursWorked: Int
+    customer: Customer
+    revenueMonth: [RevenueMonth]
+}
+
+type Customer {
+    id: ID
+    name: String
+}
+
+type RevenueMonth {
+    name: String
+    revenue: Float
+    weeks: [RevenueWeek]
+}
+
+type RevenueWeek {
+    weekNumber: Int
+    revenue: Float
+    days: [RevenueDay]
+}
+
+type RevenueDay {
+    day: String
+    revenue: Float
+}
